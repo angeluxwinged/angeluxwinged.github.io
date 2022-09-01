@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		Caverna
+	</title>
+</head>
+
+
+<body>
+	<canvas id="myCanvas" width="700" height="500">
+		Error de navegador
+	</canvas>
+
+
+	<script type="text/javascript">
+		
+		var cv = null;
+		var ctx = null;
+
+		var press = false;
+		var player1 = null;
+		var playerManzana = null;
+		var playerNaranja = null;
+		var paredes = [];
+		var puertaFinal = null;
+		var direccion = 'abajo';
+		var scoreManzanas = 0;
+		var scoreNaranjas = 0;
+		var speed = 3;
+		var pause = false;
+		var inicio = true;
+		var meta = false;
+		var auxMeta = false;
+		var win = false;
+		var inicio = true;
+
+		//imagenes
+		var murcielago = new Image();
+		var manzana = new Image();
+		var naranja = new Image();
+		var map = new Image();
+
+		//audios
+		var volar = new Audio();
+		var cueva = new Audio();
+		var bite = new Audio();
+		var abierto = new Audio();
+		var gritoFinal = new Audio();
+		var temaFondo = new Audio();
+
+		var start = Date.now();
+
+		function loop() {
+		  var seconds=Math.floor((Date.now()-start)/1000);
+		  var minutes=Math.floor(seconds/60);
+		  seconds%=60;
+		  var ctx=myCanvas.getContext("2d");
+		  ctx.strokeText(minutes.toString().padStart(2,"0")+":"+seconds.toString().padStart(2,"0"),490,30);
+		  requestAnimationFrame(loop);
+		}
+
+
+		function getRandomInt(min, max) {
+ 			min = Math.ceil(min);
+  			max = Math.floor(max);
+  			return Math.floor(Math.random() * (max - min) + min);
+		}
+
+		function Cuadro(x,y,w,h,c){
+
+			this.x = x;
+			this.y = y;
+			this.w = w;
+			this.h = h;
+			this.c = c;
+
+			this.se_tocan = function (target) { 
+				if(this.x < target.x + target.w &&
+
+				   this.x + this.w > target.x && 
+
+				   this.y < target.y + target.h && 
+
+				   this.y + this.h > target.y)
+
+				{
+
+					return true;
+
+				}  
+
+			};
+
+			this.pintar = function(ctx){
+				ctx.fillStyle = this.c;
+				ctx.fillRect(this.x,this.y,this.w,this.h);
+				ctx.strokeRect(this.x,this.y,this.w,this.h);
+			}
+		};
+
+
+		function run(){
+			cv = document.getElementById('myCanvas');
+			ctx = cv.getContext('2d');
+
+			player1 = new Cuadro(42,0,20,20,'black');
+
+			playerManzana = new Cuadro(getRandomInt(80,650),getRandomInt(50,470),10,10,"red");
+
+			playerNaranja = new Cuadro(getRandomInt(80,650),getRandomInt(50,470),10,10,"yellow");
+
+			//paredes
+			paredes[0] = new Cuadro(20,50,7,445,"green");
+			paredes[1] = new Cuadro(70,50,7,70,"green");
+			paredes[2] = new Cuadro(120,85,7,35,"green");
+			paredes[3] = new Cuadro(220,85,7,70,"green");
+			paredes[4] = new Cuadro(320,115,7,40,"green");
+			paredes[5] = new Cuadro(370,85,7,105,"green");
+			paredes[6] = new Cuadro(420,50,7,105,"green");
+			paredes[7] = new Cuadro(470,85,7,70,"green");
+			paredes[8] = new Cuadro(570,85,7,70,"green");
+			paredes[9] = new Cuadro(620,50,7,35,"green");
+			paredes[10] = new Cuadro(670,50,7,445,"green");
+			paredes[11] = new Cuadro(220,185,7,40,"green");
+			paredes[12] = new Cuadro(270,150,7,105,"green");
+			paredes[13] = new Cuadro(370,220,7,35,"green");
+			paredes[14] = new Cuadro(420,220,7,35,"green");
+			paredes[15] = new Cuadro(520,153,7,35,"green");
+			paredes[16] = new Cuadro(520,220,7,70,"green");
+			paredes[17] = new Cuadro(620,120,7,170,"green");
+			paredes[18] = new Cuadro(570,220,7,35,"green");
+			paredes[19] = new Cuadro(570,288,7,35,"green");
+			paredes[20] = new Cuadro(120,254,7,70,"green");
+			paredes[21] = new Cuadro(170,254,7,70,"green");
+			paredes[22] = new Cuadro(220,290,7,70,"green");
+			paredes[23] = new Cuadro(320,254,7,35,"green");
+			paredes[24] = new Cuadro(470,254,7,70,"green");
+			paredes[25] = new Cuadro(320,322,7,35,"green");
+			paredes[26] = new Cuadro(170,355,7,35,"green");
+			paredes[27] = new Cuadro(270,355,7,35,"green");
+			paredes[28] = new Cuadro(370,355,7,35,"green");
+			paredes[29] = new Cuadro(70,322,7,70,"green");
+			paredes[30] = new Cuadro(420,322,7,104,"green");
+			paredes[31] = new Cuadro(520,322,7,35,"green");
+			paredes[32] = new Cuadro(620,322,7,35,"green");
+			paredes[33] = new Cuadro(620,425,7,35,"green");
+			paredes[34] = new Cuadro(570,425,7,70,"green");
+			paredes[35] = new Cuadro(520,390,7,68,"green");
+			paredes[36] = new Cuadro(370,425,7,35,"green");
+			paredes[37] = new Cuadro(270,459,7,35,"green");
+			paredes[38] = new Cuadro(420,459,7,35,"green");
+			paredes[39] = new Cuadro(320,390,7,70,"green");
+			paredes[40] = new Cuadro(220,390,7,35,"green");
+			paredes[41] = new Cuadro(120,390,7,35,"green");
+			paredes[42] = new Cuadro(73,425,7,35,"green");
+
+			paredes[43] = new Cuadro(76,115,100,7,"green");
+			paredes[44] = new Cuadro(25,150,200,7,"green");
+			paredes[45] = new Cuadro(175,80,200,7,"green");
+			paredes[46] = new Cuadro(75,50,600,7,"green");
+			paredes[47] = new Cuadro(220,115,55,7,"green");
+			paredes[48] = new Cuadro(470,115,55,7,"green");
+			paredes[49] = new Cuadro(420,150,55,7,"green");
+			paredes[50] = new Cuadro(270,150,55,7,"green");
+			paredes[51] = new Cuadro(520,80,55,7,"green");
+			paredes[52] = new Cuadro(570,115,55,7,"green");
+			paredes[53] = new Cuadro(520,150,55,7,"green");
+			paredes[54] = new Cuadro(270,185,308,7,"green");
+			paredes[55] = new Cuadro(70,185,155,7,"green");
+			paredes[56] = new Cuadro(25,218,195,7,"green");
+			paredes[57] = new Cuadro(325,218,100,7,"green");
+			paredes[58] = new Cuadro(475,218,100,7,"green");
+			paredes[59] = new Cuadro(520,285,100,7,"green");
+			paredes[60] = new Cuadro(265,285,160,7,"green");
+			paredes[61] = new Cuadro(25,285,50,7,"green");
+			paredes[62] = new Cuadro(70,253,50,7,"green");
+			paredes[63] = new Cuadro(170,253,150,7,"green");
+			paredes[64] = new Cuadro(420,253,50,7,"green");
+			paredes[65] = new Cuadro(70,320,100,7,"green");
+			paredes[66] = new Cuadro(220,320,300,7,"green");
+			paredes[67] = new Cuadro(620,320,50,7,"green");
+			paredes[68] = new Cuadro(120,353,100,7,"green");
+			paredes[69] = new Cuadro(475,353,150,7,"green");
+			paredes[70] = new Cuadro(475,388,150,7,"green");
+			paredes[71] = new Cuadro(225,388,150,7,"green");
+			paredes[72] = new Cuadro(70,388,50,7,"green");
+			paredes[73] = new Cuadro(73,455,200,7,"green");
+			paredes[74] = new Cuadro(120,422,100,7,"green");
+			paredes[75] = new Cuadro(270,422,55,7,"green");
+			paredes[76] = new Cuadro(370,422,155,7,"green");
+			paredes[77] = new Cuadro(570,422,55,7,"green");
+			paredes[78] = new Cuadro(420,455,55,7,"green");
+			paredes[79] = new Cuadro(25,488,600,7,"green");
+
+			//objetos final
+			puertaFinal = new Cuadro(632,483,36,7,"black");
+			meta = new Cuadro(632,493,36,7,"black");
+			auxMeta = new Cuadro(1000,1000,36,7,"black");
+
+			//imagenes in game
+			murcielago.src = "images/murcielago.PNG";
+			manzana.src = "images/manzana.PNG";
+			naranja.src = "images/naranja.PNG";
+			map.src = "images/map.PNG";
+
+			//audio in game
+			volar.src = "sounds/volar.mp3";
+			cueva.src = "sounds/cueva.mp3";
+			bite.src = "sounds/bite.mp3";
+			abierto.src = "sounds/abierto.mp3";
+			gritoFinal.src = "sounds/gritoFinal.mp3";
+			temaFondo.src = "sounds/temaFondo.mp3"
+
+			paint();
+		}
+
+		function paint(){
+			window.requestAnimationFrame(paint);			
+
+			ctx.fillStyle = "gray";
+			ctx.fillRect(0,0,700,500);
+			ctx.drawImage(map,0,10);
+
+			ctx.font = "bold 15px Arial";
+			ctx.fillStyle = 'rgb(192,26,0)';
+			ctx.fillText("Manzanas: "+ scoreManzanas + " / 5", 100,30);
+
+			ctx.fillStyle = 'rgb(225,170,0)';
+			ctx.fillText("Naranjas: "+ scoreNaranjas + " / 5", 280,30);
+
+			ctx.drawImage(murcielago,player1.x-10,player1.y);
+			ctx.drawImage(manzana,playerManzana.x,playerManzana.y);
+			ctx.drawImage(naranja,playerNaranja.x,playerNaranja.y);
+			puertaFinal.pintar(ctx);
+
+			// for(var i = 0; i < paredes.length; i++){
+			// 	paredes[i].pintar(ctx);
+			// }
+
+			if (inicio) {
+				ctx.fillStyle = 'rgba(0,0,0,0.9)';
+				ctx.fillRect(0,0,700,500);
+
+				ctx.fillStyle = 'white';
+				ctx.fillText("PRESIONE ENTER PARA EMPEZAR", 220,230);
+
+			}else{
+				update();
+			}
+
+			if (pause) {
+				ctx.fillStyle = 'rgba(0,0,0,0.5)';
+				ctx.fillRect(0,0,700,500);
+
+				ctx.fillStyle = 'white';
+				ctx.fillText("PAUSE", 310,230);
+
+			}else{
+				update();
+			}
+
+			if (win){
+				ctx.fillStyle = 'rgba(0,0,0,0.9)';
+				ctx.fillRect(0,0,700,500);
+
+				ctx.fillStyle = 'white';
+				ctx.fillText("JUEGO SUPERADO {PRESIONA ENTER PARA REINICIAR}", 140,230);
+
+				speed = 0;
+				volar.pause();
+			}
+			
+		};
+
+		function update(){
+			//arriba
+			if(direccion == 'arriba'){
+				player1.y -= speed;
+				if (player1.y<0){
+					player1.y = 0;
+				}
+			}
+			
+			//abajo
+			if(direccion == 'abajo'){
+				player1.y += speed;
+				if (player1.y>500){
+					player1.y = 500;
+				}
+			}
+
+			//izquierda
+			if(direccion == 'izquierda'){
+				player1.x -= speed;
+				if (player1.x<10){
+					player1.x = 10;
+				}
+			}
+
+			//derecha
+			if(direccion == 'derecha'){
+				player1.x += speed;
+				if (player1.x>675){
+					player1.x = 675;
+				}
+			}
+
+			if (player1.se_tocan(playerManzana)){
+			playerManzana.x = getRandomInt(80,650);
+			playerManzana.y = getRandomInt(50,470);
+			bite.play();
+			bite.volume = 0.5;
+			scoreManzanas +=1;
+			}
+
+			if (player1.se_tocan(playerNaranja)){
+			playerNaranja.x = getRandomInt(80,650);
+			playerNaranja.y = getRandomInt(50,470);
+			bite.play();
+			bite.volume = 0.5;
+			scoreNaranjas +=1;
+			}
+
+			for(var i = 0; i < paredes.length; i++){
+				if (player1.se_tocan(paredes[i])){
+				if(direccion == 'arriba'){
+					player1.y += speed;
+				}
+				if(direccion == 'abajo'){
+					player1.y -= speed;
+				}
+				if(direccion == 'izquierda'){
+					player1.x += speed;
+				}
+				if(direccion == 'derecha'){
+					player1.x -= speed;
+				}
+			}
+			}
+			
+			for(var i = 0; i < paredes.length; i++){
+				if (playerManzana.se_tocan(paredes[i])){
+				playerManzana.x = getRandomInt(80,650);
+				playerManzana.y = getRandomInt(50,470);
+			}
+			}
+
+			for(var i = 0; i < paredes.length; i++){
+				if (playerNaranja.se_tocan(paredes[i])){
+				playerNaranja.x = getRandomInt(80,650);
+				playerNaranja.y = getRandomInt(50,470);
+			}
+			}
+
+			if(scoreManzanas == 5){
+				playerManzana.x = 1000;
+				playerManzana.y = 1000;
+
+			}
+
+			if(scoreNaranjas == 5){
+				playerNaranja.x = 1000;
+				playerNaranja.y = 1000;
+			}
+
+
+			if(scoreNaranjas == 5 && scoreManzanas == 5){
+				puertaFinal.x = 1000;
+				puertaFinal.y = 1000;
+			}
+
+			if (auxMeta.se_tocan(puertaFinal)){
+				abierto.volume = "0.5";
+				abierto.play();
+				auxMeta.x = "2000";
+			}
+
+			if(player1.se_tocan(puertaFinal)){
+				if(direccion == 'arriba'){
+					player1.y += speed;
+				}
+				if(direccion == 'abajo'){
+					player1.y -= speed;
+				}
+				if(direccion == 'izquierda'){
+					player1.x += speed;
+				}
+				if(direccion == 'derecha'){
+					player1.x -= speed;
+				}
+			}
+
+			if(player1.se_tocan(meta)){
+				win = true;
+				gritoFinal.volume = "0.5";
+				gritoFinal.play();
+				temaFondo.pause();
+				meta.x = "2000";
+			}
+
+
+		};
+
+		
+
+		window.addEventListener('load',run,false);
+
+
+		window.requestAnimationFrame = (function () {
+    		return window.requestAnimationFrame ||
+        	window.webkitRequestAnimationFrame ||
+        	window.mozRequestAnimationFrame ||
+        	function (callback) {
+            window.setTimeout(callback, 17);
+        }
+
+		}());
+
+
+
+		document.addEventListener('keydown', function(e){
+
+			//arriba
+			if(e.keyCode == 87 || e.keyCode == 38){
+				direccion = 'arriba';
+				volar.play();
+				volar.volume = 0.1;
+				if (pause) {
+				volar.pause();
+				}
+				if (inicio) {
+				volar.pause();
+				}
+			}
+			
+			//abajo
+			if(e.keyCode == 83 || e.keyCode == 40){
+				direccion = 'abajo';
+				volar.play();
+				volar.volume = 0.1;
+				if (pause) {
+				volar.pause();
+				}
+				if (inicio) {
+				volar.pause();
+				}
+			}
+
+			//izquierda
+			if(e.keyCode == 65 || e.keyCode == 37){
+				direccion = 'izquierda';
+				volar.play();
+				volar.volume = 0.1;
+				if (pause) {
+				volar.pause();
+				}
+				if (inicio) {
+				volar.pause();
+				}
+			}
+
+			//derecha
+			if(e.keyCode == 68 || e.keyCode == 39){
+				direccion = 'derecha';
+				volar.play();
+				volar.volume = 0.1;
+				if (pause) {	
+				volar.pause();
+				}
+				if (inicio) {
+				volar.pause();
+				}
+			}
+
+			//pause
+			if(e.keyCode == 32){
+				pause = (pause)?false:true;
+				if (pause) {
+					speed = 0;
+				}else{
+					speed = 3;
+				}
+			}
+
+			//reiniciar
+			if(e.keyCode == 13){
+				player1.x = 42;
+				player1.y = 0;
+				playerManzana.x = getRandomInt(80,650);
+				playerManzana.y = getRandomInt(50,470);
+				playerNaranja.x = getRandomInt(80,650);
+				playerNaranja.y = getRandomInt(50,470);
+				puertaFinal.x = 632;
+				puertaFinal.y = 483;
+				scoreManzanas = 0;
+				scoreNaranjas = 0;
+				win = false;
+				direccion = 'abajo';
+				cueva.play();
+				inicio = false;
+				speed = 3;
+				temaFondo.volume = "0.2";
+				temaFondo.play();
+				temaFondo.loop = true;
+				loop();
+			}
+		});
+
+		
+
+		
+
+
+
+	</script>
+</body>
+</html>
