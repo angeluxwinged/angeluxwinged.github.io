@@ -34,6 +34,27 @@
                     gesture-handler
                 ></a-image>
             </a-marker>
+            
+            
+            
+             <a-marker
+            id="animated-marker2"
+            type="pattern"
+            preset="custom"
+            url="assets/marker2.patt"
+            raycaster="objects: .clickable"
+            emitevents="true"
+            cursor="fuse: false; rayOrigin: mouse;"
+            id="markerA2"
+        >
+            <a-image
+                src="assets/fire.jpeg"
+                scale="1 1 1"
+                class="clickable"
+                rotation="-90 0 0"
+                gesture-handler
+            ></a-image>
+        </a-marker>
 
             <a-entity camera></a-entity>
         </a-scene>
