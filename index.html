@@ -16,6 +16,7 @@
             embedded
             gesture-detector
         >
+            <!-- alimentos -->
             <a-marker
                 id="animated-marker"
                 type="pattern"
@@ -28,7 +29,27 @@
             >
                 <a-image
                     src="images/MenuAlimentos.png"
-                     scale=".5 .5 .5"
+                    scale="1 1 1"
+                    class="clickable"
+                    rotation="-90 0 0"
+                    gesture-handler
+                ></a-image>
+            </a-marker>
+
+            <!-- bebidas -->
+            <a-marker
+                id="animated-marker"
+                type="pattern"
+                preset="custom"
+                url="images/ScanBebidas.patt"
+                raycaster="objects: .clickable"
+                emitevents="true"
+                cursor="fuse: false; rayOrigin: mouse;"
+                id="markerA"
+            >
+                <a-image
+                    src="images/MenuBebidas.png"
+                    scale="1 1 1"
                     class="clickable"
                     rotation="-90 0 0"
                     gesture-handler
