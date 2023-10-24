@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/styles_seasons.css">
+    <title>Seasons</title>
+</head>
+
+<div class="banner">
+    <a href="movies.html">
+        <img class="logo" src="images/cinepolis.png" alt="Mi Logo">
+    </a>
+    <div class="botones">
+        <a href="movies.html" class="boton">Inicio</a>
+        <a href="movies.html" class="boton">Películas</a>
+        <a href="series.html" class="boton">Series de TV</a>
+    </div>
+</div>
+
+<div id="app">
+    <div class="main">
+        <div v-for="series in seriesList" :key="series.id">
+            <h1>{{ series.name }}</h1>
+            <div class="seasons-grid">
+                <div class="season-item" v-for="(season, index) in series.seasons" :key="season.id">
+                    <div class="season-card">
+                        <div class="season-details">
+                            <img :src="getImageUrl(season.poster_path)" alt="Season Poster"
+                                @click="redirectToSeasonEpisodes(season.id, season.season_number)">
+                            <div class="season-info">
+                                <h3 class="season-title"
+                                    @click="redirectToSeasonEpisodes(season.id, season.season_number)">{{ season.name }}
+                                </h3>
+                                <p>Calificación: ⭐{{ season.vote_average }} - Fecha de lanzamiento: {{ season.air_date
+                                    }} - Número de episodios: {{ season.episode_count }}</p>
+                                <p>Sinopsis:</p>
+                                <p>{{ season.overview }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            season_Id: '',
+            seriesList: [],
+            api_Key: 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2NTQzMDQ0MTMxNTkyYzIzODExZjQxOGNmYzJlMjMxNyIsInN1YiI6IjY1MTRiOTA0Y2FkYjZiMDJjMDUxN2U4OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OCGB4IYL_Y-9abC7XTgCqzYrCT5hSm7gVQi-4WMiF00',
+        },
+        methods: {
+            getImageUrl(posterPath) {
+                return `https://image.tmdb.org/t/p/w500/${posterPath}`;
+            },
+            fetchSeries() {
+                const myHeaders = new Headers();
+                myHeaders.append("Authorization", "Bearer " + this.api_Key);
+
+                const requestOptions = {
+                    method: 'GET',
+                    headers: myHeaders,
+                    redirect: 'follow'
+                };
+
+                fetch(`https://api.themoviedb.org/3/tv/${this.season_Id}?language=es-MX`, requestOptions)
+                    .then(response => response.json())
+                    .then(data => {
+                        this.seriesList.push({
+                            id: data.id,
+                            name: data.name,
+                            seasons: data.seasons,
+                        });
+                    })
+                    .catch(error => {
+                        console.log('error', error);
+                    });
+            },
+            redirectToSeasonEpisodes(season_Id, seasonNumber) {
+                const queryParams = `seasonId=${this.season_Id}&seasonNumber=${seasonNumber}`;
+                window.location.href = `season_episodes.html?${queryParams}`;
+            },
+        },
+        mounted() {
+            if(localStorage.getItem('logged') === null){
+                window.location.href = "index.html"                
+            }
+
+            const urlMovie = window.location.href;
+            const lastParamMovie = urlMovie.split("/seasons.html?id=").slice(-1)[0];
+            this.season_Id = lastParamMovie;
+
+            this.fetchSeries();
+        }
+    });
+</script>
+</body>
+
+</html>

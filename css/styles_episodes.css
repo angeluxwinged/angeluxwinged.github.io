@@ -1,0 +1,315 @@
+@import url('https://fonts.googleapis.com/css?family=Quicksand:400,700');
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    background-color: #1c1c1c;
+}
+
+body {
+    color: #ffffff;
+    font-family: 'Quicksand', serif;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0;
+    padding: 1rem;
+}
+
+.main {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 1px;
+    text-transform: capitalize;
+    margin-top: 30px;
+}
+
+img {
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+.banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+}
+
+.logo {
+    width: 100px;
+    height: auto;
+    margin-right: 40px;
+}
+
+.botones {
+    display: flex;
+}
+
+.boton {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    text-decoration: none;
+    margin-right: 30px;
+    border: none;
+    border-radius: 50px;
+}
+
+.boton:hover {
+    background-color: #2b0670;
+}
+
+@media (max-width: 768px) {
+    .banner {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .logo {
+        margin: 0;
+    }
+
+    .botones {
+        margin-top: 10px;
+    }
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    justify-content: space-between;
+}
+
+.cards_item {
+    flex-basis: calc(100% - 1rem);
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+.card {
+    background: linear-gradient(to bottom left, #1d28c2 40%, #5b63ce 100%);
+    border-radius: 0.25rem;
+    box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 1rem;
+    margin-top: 2%;
+}
+
+.card_title {
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: capitalize;
+    margin: 0px;
+}
+
+.card_text {
+    color: #ffffff;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+    font-weight: 400;
+}
+
+.card_content {
+    background: linear-gradient(to bottom left, #1d28c2 40%, #5b63ce 100%);
+    border-radius: 0.25rem;
+    box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 1rem;
+}
+
+.episode-details {
+    display: flex;
+    align-items: flex-start;
+}
+
+.episode-image img {
+    max-width: 300px;
+    height: auto;
+    margin-right: 1rem;
+    align-self: flex-start;
+}
+
+.episode-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    color: #ffffff;
+}
+
+.episode-description {
+    font-size: 0.875rem;
+    color: #ffffff;
+}
+
+.details-button {
+
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+.season-button {
+    background: #0074D9;
+    color: #fff;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 4%;
+    margin-top: 35px;
+    cursor: pointer;
+}
+
+.season-button::after {
+    content: "\25BC";
+    margin-left: 15px;
+}
+
+.season-dropdown {
+    display: flex;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    margin-top: 4.22%;
+    cursor: pointer;
+}
+
+.season-dropdown a {
+    padding: 12px 16px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.season-dropdown a:hover {
+    background-color: #f1f1f1;
+    color: #007BFF;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 20px;
+}
+
+.season-button-container {
+    align-self: center;
+}
+
+.guest-stars-list {
+    list-style: none;
+    columns: 2;
+    column-gap: 20px;
+}
+
+.guest-star {
+    margin-bottom: 10px;
+}
+
+.guest-star-name {
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.guest-star-character {
+    font-style: italic;
+    color: #000000;
+    font-size: 14px;
+}
+
+.season-navigation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 850px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+.season-navigation button {
+    background-color: transparent;
+    color: #0074D9;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    margin: 0;
+}
+
+.arrow-icon {
+    font-size: 24px;
+}
+
+.banner2 {
+    position: relative;
+    display: flex;
+    padding: 0px;
+    background: linear-gradient(to bottom left, #1d28c2 40%, #5b63ce 100%);
+    z-index: 1;
+    width: 100%;
+    margin-top: 16px;
+    flex-direction: column;
+    z-index: 1;
+}
+
+.banner2 h1 {
+    text-align: left;
+    padding: 5px 15px;
+}
+
+.banner2 button {
+    background-color: transparent;
+    color: white;
+    border: none;
+    padding: 7px 15px;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+    .banner2 {
+        flex-direction: column;
+    }
+
+    .banner2 button {
+        margin-top: 10px;
+    }
+}
